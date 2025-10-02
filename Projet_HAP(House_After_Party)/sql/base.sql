@@ -19,11 +19,7 @@ CREATE TABLE IF NOT EXISTS Commune(
     ville_canton VARCHAR(10),
     ville_code_commune VARCHAR(5),
     ville_commune VARCHAR(5),
-    ville_population_2010 INT,
-    ville_population_1999 INT,
-    ville_population_2012 INT,
     ville_surface FLOAT,
-    ville_densite_2010 INT,
     ville_zmin INT,
     ville_zmax INT,
     UNIQUE (code_insee)                        -- Pour éviter les doublons
@@ -168,14 +164,12 @@ INSERT INTO Commune (
     code_insee, nom_commune, cp_commune, latitude_commune, longitude_commune,
     ville_slug, ville_nom_reel, ville_nom_soundex, ville_nom_metaphone,
     ville_departement, ville_arrondissement, ville_canton, ville_code_commune, ville_commune,
-    ville_population_2010, ville_population_1999, ville_population_2012,
-    ville_surface, ville_densite_2010, ville_zmin, ville_zmax
+    ville_surface, ville_zmin, ville_zmax
 )
 SELECT
     ville_code_commune, ville_nom, ville_code_postal, ville_latitude_deg, ville_longitude_deg,
     ville_slug, ville_nom_reel, ville_nom_soundex, ville_nom_metaphone,
     ville_departement, ville_arrondissement, ville_canton, ville_code_commune, ville_commune,
-    ville_population_2010, ville_population_1999, ville_population_2012,
-    ville_surface, ville_densite_2010, ville_zmin, ville_zmax
+    ville_surface, ville_zmin, ville_zmax
 FROM villes_france_free;
 
