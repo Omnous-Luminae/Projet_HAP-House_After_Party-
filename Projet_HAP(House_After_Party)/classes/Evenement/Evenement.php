@@ -55,15 +55,18 @@ public function readIdEvenement($id_evenement){
 
 public function updateEvenement($id_evenement,$nom_evenement,$date_debut_evenement,$date_fin_evenement,$description_evenement){
     $stmt=$this->pdo->prepare("UPDATE Evenement SET nom_evenement=:nomevenement,date_debut_evenement=:datedebutevenement,date_fin_evenement=:datefinevenement,description_evenement=:descriptionevenement WHERE id_evenement=:idevenement");
-    return $stmt->execute(['
-    idevenement'=>$id_evenement,
-    'nomevenement'=>$nom_evenement,
-    'datedebutevenement'=>$date_debut_evenement,
+    return $stmt->execute([
+    'idevenement'=>$id_evenement,
+    'nom_evenement'=>$nom_evenement,
+    'date_debut_evenement'=>$date_debut_evenement,
     'date_fin_evenement' => $date_fin_evenement,
-     'descriptionevement'=>$description_evenement
+     'description_evement'=>$description_evenement
     ]);
 }
-}
 
-?>
+public function deleteEvenement($id_evenement){
+    $stmt=$this->pdo->prepare("DELETE FROM Evenement WHERE id_evenement=:idevenement");
+    return $stmt->execute(['idevenement'=>$id_evenement]);
+    }
 }
+?>
