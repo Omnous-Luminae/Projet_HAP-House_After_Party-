@@ -13,8 +13,9 @@ Class Locataire{
     private $complement_rue_locataire = "";
     private $email_locataire = "";
     private $tel_locataire = "";
+    private $pdo;
 
-    public function __construct($id_locataire, $nom_locataire, $prenom_locataire, $email_locataire, $tel_locataire, $date_naissance_locataire, $mdp_locataire, $rue_locataire, $complement_rue_locataire){
+    public function __construct($id_locataire, $nom_locataire, $prenom_locataire, $email_locataire, $tel_locataire, $date_naissance_locataire, $mdp_locataire, $rue_locataire, $complement_rue_locataire,$pdo){
         $this->id_locataire = $id_locataire;
         $this->nom_locataire = $nom_locataire;
         $this->prenom_locataire = $prenom_locataire;
@@ -24,6 +25,7 @@ Class Locataire{
         $this->mdp_locataire = $mdp_locataire;
         $this->rue_locataire = $rue_locataire;
         $this->complement_rue_locataire = $complement_rue_locataire;
+        $this->pdo = $pdo;
     }
 
     public function getIdLocataire() { return $this->id_locataire; }
@@ -45,4 +47,67 @@ Class Locataire{
     public function setRueLocataire($rue_locataire) { $this->rue_locataire = $rue_locataire; }
     public function setComplementRueLocataire($complement_rue_locataire) { $this->complement_rue_locataire = $complement_rue_locataire; }
 
+// CREATE
+public function createLocataire($nom_locataire,$prenom_locataire, $email_locataire, $tel_locataire, $date_naissance_locataire, $mdp_locataire, $rue_locataire, $complement_rue_locataire, $siret = null, $raison_sociale = null)
+    {
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO Locataire (nom_locataire, prenom_locataire, email_locataire, tel_locataire, date_naissance_locataire, mdp_locataire, rue_locataire, complement_rue_locataire, siret, raison_sociale)
+            VALUES (:nom, :prenom, :email, :tel, :date_naissance, :mdp, :rue, :complement, :siret, :raison_sociale)"
+        );
+        return $stmt->execute([
+            'nom' => $nom_locataire,
+            'prenom' => $prenom_locataire,
+            'email' => $email_locataire,
+            'tel' => $tel_locataire,
+            'date_naissance' => $date_naissance_locataire,
+            'mdp' => $mdp_locataire,
+            'rue' => $rue_locataire,
+            'complement' => $complement_rue_locataire,
+            'siret' => $siret,
+            'raison_sociale' => $raison_sociale
+        ]);
+    }
+
+    // READ (all)
+    public function getAllLocataire()
+    {
+        $stmt = $this->pdo->query("SELECT * FROM Locataire");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // READ (one)
+    public function getLocataireById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM Locataire WHERE id_locataire = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // UPDATE
+    public function updateLocataire($id_locataire, $nom_locataire, $prenom_locataire,$email_locataire, $tel_locataire, $date_naissance_locataire, $mdp_locataire, $rue_locataire, $complement_locataire, $siret = null, $raison_sociale = null)
+    {
+        $stmt = $this->pdo->prepare(
+            "UPDATE Locataire SET nom_locataire = :nom, prenom_locataire = :prenom, email_locataire = :email, tel_locataire = :tel, date_naissance_locataire = :date_naissance, mdp_locataire = :mdp, rue_locataire = :rue, complement_rue_locataire = :complement, siret = :siret, raison_sociale = :raison_sociale WHERE id_locataire = :id"
+        );
+        return $stmt->execute([
+            'id_locataire' => $id_locataire,
+            'nom_locataire' => $nom_locataire  ,
+            'prenom_locataire' => $prenom_locataire,
+            'email_locataire' => $email_locataire,
+            'tel_locataire' => $tel_locataire,
+            'date_naissance_locataire' => $date_naissance_locataire,
+            'mdp_locataire' => $mdp_locataire,
+            'rue_locataire' => $rue_locataire,
+            'complement_locataire' => $complement_locataire,
+            'siret' => $siret,
+            'raison_sociale' => $raison_sociale
+        ]);
+    }
+
+    // DELETE
+    public function deleteLocataire($id)
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM Locataire WHERE id_locataire = :id");
+        return $stmt->execute(['id' => $id]);
+    }
 }
