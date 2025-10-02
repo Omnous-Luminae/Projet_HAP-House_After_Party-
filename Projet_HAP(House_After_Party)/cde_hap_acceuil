@@ -1,0 +1,457 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { Input } from './ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { ImageWithFallback } from './figma/ImageWithFallback';
+import { Music, MapPin, Calendar, Clock, Users, Star, Phone, Globe, Instagram, Euro } from 'lucide-react';
+
+interface NightclubEvent {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  description: string;
+  dj: string;
+  price: string;
+  isSpecial: boolean;
+}
+
+interface Nightclub {
+  id: string;
+  name: string;
+  description: string;
+  address: string;
+  city: string;
+  musicGenres: string[];
+  openingHours: string;
+  capacity: number;
+  rating: number;
+  reviewCount: number;
+  priceRange: string;
+  phone: string;
+  website: string;
+  instagram: string;
+  images: string[];
+  events: NightclubEvent[];
+  nearbyAccommodations: number;
+  features: string[];
+}
+
+export function Nightclubs() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('');
+
+  const nightclubs: Nightclub[] = [
+    {
+      id: 'loft-club',
+      name: 'Loft Club',
+      description: 'Club emblématique de la nuit parisienne, le Loft Club propose une programmation électro de qualité dans un cadre unique avec sa mezzanine et ses espaces VIP.',
+      address: '12 rue de la Pompe',
+      city: 'Paris',
+      musicGenres: ['House', 'Techno', 'Deep House'],
+      openingHours: 'Mer-Sam 23h-6h',
+      capacity: 800,
+      rating: 4.6,
+      reviewCount: 342,
+      priceRange: '15-25€',
+      phone: '01 47 20 82 15',
+      website: 'www.loftclub.fr',
+      instagram: '@loftclub_paris',
+      images: ['/api/placeholder/600/400'],
+      nearbyAccommodations: 8,
+      features: ['Vestiaire', 'Bar premium', 'Espace VIP', 'Sound system professionnel'],
+      events: [
+        {
+          id: '1',
+          title: 'Electric Friday',
+          date: '2024-03-15',
+          time: '23:00',
+          description: 'Soirée électro avec les meilleurs DJs parisiens',
+          dj: 'DJ Martinez',
+          price: '20€',
+          isSpecial: false
+        },
+        {
+          id: '2',
+          title: 'Techno Saturday Night',
+          date: '2024-03-16',
+          time: '23:30',
+          description: 'Une nuit dédiée à la techno underground',
+          dj: 'Carl Cox',
+          price: '30€',
+          isSpecial: true
+        }
+      ]
+    },
+    {
+      id: 'warehouse',
+      name: 'Warehouse',
+      description: 'Temple de la musique électronique alternative, le Warehouse offre une expérience immersive avec ses installations sonores de pointe et son ambiance industrielle.',
+      address: '15 rue de la Roquette',
+      city: 'Paris',
+      musicGenres: ['Techno', 'Minimal', 'Tech House'],
+      openingHours: 'Ven-Sam 00h-8h',
+      capacity: 600,
+      rating: 4.8,
+      reviewCount: 198,
+      priceRange: '12-20€',
+      phone: '01 48 05 34 27',
+      website: 'www.warehouse-paris.com',
+      instagram: '@warehouse_paris',
+      images: ['/api/placeholder/600/400'],
+      nearbyAccommodations: 5,
+      features: ['Fumoir extérieur', 'Bar à cocktails', 'Chill-out zone', 'Sound system Funktion-One'],
+      events: [
+        {
+          id: '3',
+          title: 'Underground Sessions',
+          date: '2024-03-17',
+          time: '00:00',
+          description: 'Nuit techno avec les talents émergents',
+          dj: 'Local Talents',
+          price: '15€',
+          isSpecial: false
+        },
+        {
+          id: '4',
+          title: 'Warehouse Festival',
+          date: '2024-03-23',
+          time: '22:00',
+          description: 'Festival électronique exceptionnel avec line-up international',
+          dj: 'Multiple DJs',
+          price: '45€',
+          isSpecial: true
+        }
+      ]
+    },
+    {
+      id: 'red-club',
+      name: 'Red Club',
+      description: 'Nouveau spot branché du 11ème, le Red Club mise sur une programmation éclectique et une décoration soignée avec ses éclairages rouges caractéristiques.',
+      address: '8 avenue Parmentier',
+      city: 'Paris',
+      musicGenres: ['House', 'Deep House', 'Nu-Disco'],
+      openingHours: 'Jeu-Sam 22h-5h',
+      capacity: 400,
+      rating: 4.4,
+      reviewCount: 156,
+      priceRange: '10-18€',
+      phone: '01 43 57 29 18',
+      website: 'www.redclub-paris.fr',
+      instagram: '@redclub_official',
+      images: ['/api/placeholder/600/400'],
+      nearbyAccommodations: 12,
+      features: ['Terrasse', 'Bar à vins', 'Lounge VIP', 'Photobooth'],
+      events: [
+        {
+          id: '5',
+          title: 'Red Hot Thursday',
+          date: '2024-03-14',
+          time: '22:00',
+          description: 'Soirée house décontractée en début de weekend',
+          dj: 'DJ Sarah M.',
+          price: '12€',
+          isSpecial: false
+        },
+        {
+          id: '6',
+          title: 'Deep House Saturday',
+          date: '2024-03-16',
+          time: '22:30',
+          description: 'Les meilleurs sons deep house de la capitale',
+          dj: 'Marco Deep',
+          price: '16€',
+          isSpecial: false
+        }
+      ]
+    },
+    {
+      id: 'concrete',
+      name: 'Concrete',
+      description: 'Club iconique installé sur une péniche, Concrete est LA référence de la scène électronique parisienne avec vue imprenable sur la Seine.',
+      address: '69 port de la Rapée',
+      city: 'Paris',
+      musicGenres: ['Techno', 'House', 'Electro'],
+      openingHours: 'Sam-Dim 00h-12h',
+      capacity: 1000,
+      rating: 4.9,
+      reviewCount: 523,
+      priceRange: '20-35€',
+      phone: '01 44 68 09 87',
+      website: 'www.concreteparis.fr',
+      instagram: '@concrete_paris',
+      images: ['/api/placeholder/600/400'],
+      nearbyAccommodations: 6,
+      features: ['Terrasse sur Seine', 'Plusieurs dancefloors', 'Restaurant', 'After hours'],
+      events: [
+        {
+          id: '7',
+          title: 'Sunday Marathon',
+          date: '2024-03-17',
+          time: '00:00',
+          description: 'Marathon musical de 12h sur la Seine',
+          dj: 'Multiple DJs',
+          price: '25€',
+          isSpecial: true
+        },
+        {
+          id: '8',
+          title: 'Concrete Invites',
+          date: '2024-03-23',
+          time: '23:00',
+          description: 'Invitations spéciales avec DJs internationaux',
+          dj: 'Guest DJs',
+          price: '35€',
+          isSpecial: true
+        }
+      ]
+    }
+  ];
+
+  const cities = ['Paris', 'Lyon', 'Marseille', 'Lille'];
+  const musicGenres = ['House', 'Techno', 'Deep House', 'Minimal', 'Tech House', 'Nu-Disco', 'Electro'];
+
+  const filteredClubs = nightclubs.filter(club => {
+    const matchesSearch = club.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          club.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          club.musicGenres.some(genre => genre.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesCity = !selectedCity || selectedCity === 'all-cities' || club.city === selectedCity;
+    const matchesGenre = !selectedGenre || selectedGenre === 'all-genres' || club.musicGenres.includes(selectedGenre);
+    return matchesSearch && matchesCity && matchesGenre;
+  });
+
+  const getUpcomingEvents = (club: Nightclub) => {
+    const today = new Date();
+    return club.events.filter(event => new Date(event.date) >= today).slice(0, 2);
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
+      <div className="text-center mb-12">
+        <h1 className="text-4xl mb-4">Nos clubs partenaires</h1>
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          Découvrez les meilleures boîtes de nuit et leurs événements spéciaux. 
+          Nos logements sont sélectionnés à proximité de ces lieux emblématiques.
+        </p>
+      </div>
+
+      {/* Filtres */}
+      <div className="mb-8">
+        <div className="flex flex-col lg:flex-row gap-4 items-center">
+          <div className="flex-1 max-w-md">
+            <Input
+              placeholder="Rechercher un club ou style de musique..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          
+          <Select value={selectedCity} onValueChange={setSelectedCity}>
+            <SelectTrigger className="w-full lg:w-48">
+              <SelectValue placeholder="Ville" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all-cities">Toutes les villes</SelectItem>
+              {cities.map((city) => (
+                <SelectItem key={city} value={city}>{city}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedGenre} onValueChange={setSelectedGenre}>
+            <SelectTrigger className="w-full lg:w-48">
+              <SelectValue placeholder="Style musical" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all-genres">Tous les styles</SelectItem>
+              {musicGenres.map((genre) => (
+                <SelectItem key={genre} value={genre}>{genre}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Liste des clubs */}
+      <div className="space-y-8">
+        {filteredClubs.map((club) => {
+          const upcomingEvents = getUpcomingEvents(club);
+          
+          return (
+            <Card key={club.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="grid lg:grid-cols-3 gap-6">
+                {/* Image */}
+                <div className="lg:col-span-1">
+                  <div className="aspect-video lg:aspect-square relative">
+                    <ImageWithFallback
+                      src={club.images[0]}
+                      alt={club.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-white text-gray-800">
+                        <Star className="w-3 h-3 mr-1 text-yellow-500 fill-current" />
+                        {club.rating}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Informations principales */}
+                <div className="lg:col-span-2 p-6">
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h2 className="text-2xl">{club.name}</h2>
+                        <div className="flex gap-1">
+                          {club.musicGenres.slice(0, 3).map((genre) => (
+                            <Badge key={genre} variant="secondary" className="text-xs">
+                              {genre}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                        <div className="flex items-center">
+                          <MapPin className="w-4 h-4 mr-1" />
+                          {club.address}, {club.city}
+                        </div>
+                        <div className="flex items-center">
+                          <Users className="w-4 h-4 mr-1" />
+                          {club.capacity} pers.
+                        </div>
+                        <div className="flex items-center">
+                          <Euro className="w-4 h-4 mr-1" />
+                          {club.priceRange}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 mt-4 lg:mt-0">
+                      <Button size="sm" variant="outline">
+                        <Phone className="w-4 h-4 mr-1" />
+                        Appeler
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Globe className="w-4 h-4 mr-1" />
+                        Site web
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Instagram className="w-4 h-4 mr-1" />
+                        Insta
+                      </Button>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-600 mb-4 line-clamp-2">{club.description}</p>
+
+                  {/* Détails */}
+                  <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <div className="flex items-center text-sm text-gray-600 mb-2">
+                        <Clock className="w-4 h-4 mr-2" />
+                        <span>{club.openingHours}</span>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600 mb-2">
+                        <Star className="w-4 h-4 mr-2 text-yellow-500 fill-current" />
+                        <span>{club.rating}/5 ({club.reviewCount} avis)</span>
+                      </div>
+                      <div className="flex items-center text-sm text-purple-600">
+                        <MapPin className="w-4 h-4 mr-2" />
+                        <span>{club.nearbyAccommodations} logements à proximité</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">Équipements:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {club.features.slice(0, 4).map((feature, idx) => (
+                          <Badge key={idx} variant="outline" className="text-xs">
+                            {feature}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Événements à venir */}
+                  {upcomingEvents.length > 0 && (
+                    <div>
+                      <h3 className="text-sm mb-3">Événements à venir</h3>
+                      <div className="grid gap-3">
+                        {upcomingEvents.map((event) => (
+                          <div key={event.id} className="bg-gray-50 rounded-lg p-3">
+                            <div className="flex items-center justify-between mb-1">
+                              <h4 className="text-sm">{event.title}</h4>
+                              <div className="flex items-center gap-2">
+                                {event.isSpecial && (
+                                  <Badge className="text-xs bg-purple-100 text-purple-700">
+                                    Spécial
+                                  </Badge>
+                                )}
+                                <span className="text-sm text-purple-600">{event.price}</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-4 text-xs text-gray-600">
+                              <div className="flex items-center">
+                                <Calendar className="w-3 h-3 mr-1" />
+                                {new Date(event.date).toLocaleDateString()}
+                              </div>
+                              <div className="flex items-center">
+                                <Clock className="w-3 h-3 mr-1" />
+                                {event.time}
+                              </div>
+                              <div className="flex items-center">
+                                <Music className="w-3 h-3 mr-1" />
+                                {event.dj}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex gap-3 mt-4">
+                    <Button className="flex-1">
+                      Voir les logements à proximité
+                    </Button>
+                    <Button variant="outline">
+                      Plus d'infos
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          );
+        })}
+      </div>
+
+      {filteredClubs.length === 0 && (
+        <div className="text-center py-12">
+          <Music className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+          <h3 className="text-xl mb-2">Aucun club trouvé</h3>
+          <p className="text-gray-500">Essayez de modifier vos critères de recherche</p>
+        </div>
+      )}
+
+      {/* CTA Section */}
+      <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg p-8 mt-16">
+        <div className="text-center max-w-2xl mx-auto">
+          <h2 className="text-2xl mb-4">Vous êtes propriétaire d'un club ?</h2>
+          <p className="text-purple-100 mb-6">
+            Rejoignez notre réseau de partenaires et proposez vos événements à notre communauté
+          </p>
+          <Button className="bg-white text-purple-600 hover:bg-purple-50">
+            Devenir partenaire
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
