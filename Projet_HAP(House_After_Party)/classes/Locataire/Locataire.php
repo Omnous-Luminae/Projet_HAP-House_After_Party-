@@ -48,11 +48,11 @@ Class Locataire{
     public function setComplementRueLocataire($complement_rue_locataire) { $this->complement_rue_locataire = $complement_rue_locataire; }
 
 // CREATE
-public function createLocataire($nom_locataire,$prenom_locataire, $email_locataire, $tel_locataire, $date_naissance_locataire, $mdp_locataire, $rue_locataire, $complement_rue_locataire, $siret = null, $raison_sociale = null)
+    public function createLocataire($nom_locataire,$prenom_locataire, $email_locataire, $tel_locataire, $date_naissance_locataire, $mdp_locataire, $rue_locataire, $complement_rue_locataire, $siret = null, $raison_sociale = null, $id_commune = 1)
     {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO Locataire (nom_locataire, prenom_locataire, email_locataire, tel_locataire, date_naissance_locataire, mdp_locataire, rue_locataire, complement_rue_locataire, siret, raison_sociale)
-            VALUES (:nom, :prenom, :email, :tel, :date_naissance, :mdp, :rue, :complement, :siret, :raison_sociale)"
+            "INSERT INTO Locataire (nom_locataire, prenom_locataire, email_locataire, telephone_locataire, date_naissance, password_locataire, rue_locataire, complement_locataire, siret, raison_sociale, id_commune)
+            VALUES (:nom, :prenom, :email, :tel, :date_naissance, :mdp, :rue, :complement, :siret, :raison_sociale, :id_commune)"
         );
         return $stmt->execute([
             'nom' => $nom_locataire,
@@ -64,7 +64,8 @@ public function createLocataire($nom_locataire,$prenom_locataire, $email_locatai
             'rue' => $rue_locataire,
             'complement' => $complement_rue_locataire,
             'siret' => $siret,
-            'raison_sociale' => $raison_sociale
+            'raison_sociale' => $raison_sociale,
+            'id_commune' => $id_commune
         ]);
     }
 
