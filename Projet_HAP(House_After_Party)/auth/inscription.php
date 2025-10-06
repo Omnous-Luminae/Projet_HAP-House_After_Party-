@@ -36,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             $siret_value = $type === 'morale' ? $siret : null;
             $raison_sociale_value = $type === 'morale' ? $raison_sociale : null;
 
-            $locataireObj = new Locataire(null, $nom_locataire, $prenom_locataire, $email_locataire, $tel_locataire, $date_naissance_locataire, $hashed_password, $rue_lataire, $complement_rue_locataire, $pdo);
-            if ($locataireObj->createLocataire($nom_locataire, $prenom_locataire, $email_locataire, $tel_locataire, $date_naissance_locataire, $hashed_password, $rue_loataire, $complement_rue_locataire, $siret_value, $raison_sociale_value)) {
+            $locataireObj = new Locataire(null, $nom_locataire, $prenom_locataire, $email_locataire, $tel_locataire, $date_naissance_locataire, $hashed_password, $rue_locataire, $complement_rue_locataire, $pdo);
+            if ($locataireObj->createLocataire($nom_locataire, $prenom_locataire, $email_locataire, $tel_locataire, $date_naissance_locataire, $hashed_password, $rue_locataire, $complement_rue_locataire, $siret_value, $raison_sociale_value)) {
                 $message = "Inscription réussie. Vous pouvez maintenant vous connecter.";
             } else {
                 $message = "Erreur lors de l'inscription.";
