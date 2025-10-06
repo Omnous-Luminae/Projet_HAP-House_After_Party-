@@ -1,14 +1,14 @@
 <?php
 // filepath: c:\xampp\php\Projet_HAP\index.php
 
-require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/Projet_HAP(House_After_Party)/config/db.php';
 
 // Autoload simple
 spl_autoload_register(function ($class) {
     $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
     $paths = [
-        __DIR__ . '/classes/' . $class . '.php',
-        __DIR__ . '/classes/' . $class . '/' . $class . '.php', // Ajout pour Saison/Saison.php etc.
+        __DIR__ . '/Projet_HAP(House_After_Party)/classes/' . $class . '.php',
+        __DIR__ . '/Projet_HAP(House_After_Party)/classes/' . $class . '/' . $class . '.php', // Ajout pour Saison/Saison.php etc.
     ];
     foreach ($paths as $path) {
         if (file_exists($path)) {
@@ -91,6 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['entity']) && !isset($
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Lightbox CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -336,7 +338,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['entity']) && !isset($
             </table>
         </div>
     </section>
-
     <?php if ($message): ?>
         <p style="color:green"><?= htmlspecialchars($message) ?></p>
     <?php endif; ?>
@@ -357,5 +358,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['entity']) && !isset($
         </form>
     <?php endforeach; ?>
     <p>Adapte les champs et le traitement selon la structure de chaque entité.</p>
+
+    <!-- Lightbox JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 </body>
 </html>
