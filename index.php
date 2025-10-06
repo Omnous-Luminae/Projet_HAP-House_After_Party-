@@ -29,7 +29,7 @@ require_once __DIR__ . '/Projet_HAP(House_After_Party)/config/db.php';
             <a href="#">👤 Blog</a>
             <a href="Projet_HAP(House_After_Party)/forms/Saison.form.php">🗓️ Saisons</a>
         </nav>
-        <button class="btn-login">Se connecter</button>
+        <a href="Projet_HAP(House_After_Party)/auth/connexion.php" class="btn-login">Se connecter</a>
     </header>
     <section class="hero">
         <h1>House After Party</h1>
