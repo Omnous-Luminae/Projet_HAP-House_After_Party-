@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                 $stmt->execute(['email' => $email]);
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if ($user && password_verify($password, $user['mdp_locataire'])) {
+            if ($user && password_verify($password, $user['password_locataire'])) {
                     // Authentification réussie
                     $_SESSION['user_id'] = $user['id_locataire'];
                     $_SESSION['user_name'] = $user['nom_locataire'];
