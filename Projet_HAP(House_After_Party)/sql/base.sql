@@ -156,6 +156,16 @@ CREATE TABLE IF NOT EXISTS Compose(
     foreign key (id_prestation) references Prestation(id_prestation)
 );
 
+CREATE TABLE photos (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    chemin VARCHAR(255) NOT NULL,
+
+    date_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
+
 -- Exemple d'index pour accélérer les recherches par code postal ou nom
 CREATE INDEX idx_cp_commune ON Commune(cp_commune);
 CREATE INDEX idx_nom_commune ON Commune(nom_commune);
