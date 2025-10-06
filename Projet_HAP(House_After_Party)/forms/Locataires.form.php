@@ -1,0 +1,164 @@
+<?php
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../classes/Locataire/Locataire.php';
+require_once __DIR__ . '/../classes/Locataire/Personne_Physique/Personne_Physique.php';
+require_once __DIR__ . '/../classes/Locataire/Personne_Morale/Personne_Morale.php';
+
+$message = '';
+$locataires = [];
+
+try {
+    $pdo = $pdo ?? null;
+    if ($pdo) {
+        $locataireObj = new Locataire(null, null, null, null, null, null, null, null, null, $pdo);
+
+        // Ajout d'un locataire
+        if (isset($_POST['add_locataire'])) {
+            $type = $_POST['type_locataire'] ?? 'physique';
+            $nom = trim($_POST['nom'] ?? '');
+            $prenom = trim($_POST['prenom'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $tel = trim($_POST['tel'] ?? '');
+            $date_naissance = $_POST['date_naissance'] ?? null;
+            $mdp = $_POST['mdp'] ?? '';
+            $rue = trim($_POST['rue'] ?? '');
+            $complement = trim($_POST['complement'] ?? '');
+            $siret = trim($_POST['siret'] ?? '');
+            $raison_sociale = trim($_POST['raison_sociale'] ?? '');
+
+            if ($type === 'physique') {
+                if ($nom && $prenom && $email && $tel && $date_naissance && $mdp && $rue) {
+                    $pp = new PersonnePhysique(null, $nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement);
+                    if ($locataireObj->createLocataire($nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement, null, null)) {
+                        $message = "Locataire (personne physique) ajouté avec succès.";
+                    } else {
+                        $message = "Erreur lors de l'ajout.";
+                    }
+                }
+            } else {
+                if ($nom && $prenom && $email && $tel && $date_naissance && $mdp && $rue && $siret && $raison_sociale) {
+                    $pm = new PersonneMorale(null, $nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement, $siret, $raison_sociale);
+                    if ($locataireObj->createLocataire($nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement, $siret, $raison_sociale)) {
+                        $message = "Locataire (personne morale) ajouté avec succès.";
+                    } else {
+                        $message = "Erreur lors de l'ajout.";
+                    }
+                }
+            }
+        }
+
+        // Suppression d'un locataire
+        if (isset($_POST['delete_locataire']) && isset($_POST['id_locataire'])) {
+            $id = intval($_POST['id_locataire']);
+            if ($locataireObj->deleteLocataire($id)) {
+                $message = "Locataire supprimé avec succès.";
+            } else {
+                $message = "Erreur lors de la suppression.";
+            }
+        }
+
+        // Récupération des locataires
+        $locataires = $locataireObj->getAllLocataire();
+    }
+} catch (Exception $e) {
+    $message = "Erreur : " . $e->getMessage();
+}
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des Locataires</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', Arial, sans-serif; background: #f7f7f9; margin: 0; }
+        .container { max-width: 900px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 2px 16px rgba(80,0,80,0.06); padding: 40px 30px; }
+        h2 { text-align: center; margin-bottom: 28px; }
+        form { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        input, select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
+        input[type="submit"], button { background: #a100b8; color: #fff; border: none; border-radius: 6px; padding: 8px 18px; font-weight: 600; cursor: pointer; }
+        input[type="submit"]:hover, button:hover { background: #4b006e; }
+        .locataire-list { margin-top: 20px; }
+        .locataire-list table { border-collapse: collapse; width: 100%; }
+        .locataire-list th, .locataire-list td { border: 1px solid #ccc; padding: 8px 12px; text-align: center; }
+        .locataire-list th { background: #f3e6fa; }
+        .success { color: green; text-align: center; margin-bottom: 18px; }
+        .back-link { display: block; margin-bottom: 18px; color: #a100b8; text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+        .morale-fields { display: none; }
+    </style>
+    <script>
+        function toggleLocataireFields() {
+            const type = document.getElementById('type_locataire').value;
+            document.querySelectorAll('.morale-fields').forEach(e => e.style.display = (type === 'morale') ? 'block' : 'none');
+        }
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('type_locataire').addEventListener('change', toggleLocataireFields);
+            toggleLocataireFields();
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <a href="/index.php" class="back-link">&larr; Retour à l'accueil</a>
+        <h2>Gestion des Locataires</h2>
+        <?php if ($message): ?>
+            <div class="success"><?= htmlspecialchars($message) ?></div>
+        <?php endif; ?>
+        <form method="post">
+            <select name="type_locataire" id="type_locataire" required>
+                <option value="physique">Personne physique</option>
+                <option value="morale">Personne morale</option>
+            </select>
+            <input type="text" name="nom" placeholder="Nom" required>
+            <input type="text" name="prenom" placeholder="Prénom" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="tel" placeholder="Téléphone" required>
+            <input type="date" name="date_naissance" placeholder="Date de naissance" required>
+            <input type="password" name="mdp" placeholder="Mot de passe" required>
+            <input type="text" name="rue" placeholder="Rue" required>
+            <input type="text" name="complement" placeholder="Complément d'adresse">
+            <input type="text" class="morale-fields" name="siret" placeholder="SIRET">
+            <input type="text" class="morale-fields" name="raison_sociale" placeholder="Raison sociale">
+            <input type="submit" name="add_locataire" value="Ajouter">
+        </form>
+        <div class="locataire-list">
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Date naissance</th>
+                    <th>Rue</th>
+                    <th>Complément</th>
+                    <th>SIRET</th>
+                    <th>Raison sociale</th>
+                    <th>Actions</th>
+                </tr>
+                <?php foreach ($locataires as $loc): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($loc['id_locataire']) ?></td>
+                        <td><?= htmlspecialchars($loc['nom_locataire']) ?></td>
+                        <td><?= htmlspecialchars($loc['prenom_locataire']) ?></td>
+                        <td><?= htmlspecialchars($loc['email_locataire']) ?></td>
+                        <td><?= htmlspecialchars($loc['telephone_locataire'] ?? $loc['tel_locataire'] ?? $loc['tel'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($loc['date_naissance'] ?? $loc['date_naissance_locataire'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($loc['rue_locataire']) ?></td>
+                        <td><?= htmlspecialchars($loc['complement_locataire'] ?? $loc['complement_rue_locataire'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($loc['siret'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($loc['raison_sociale'] ?? '') ?></td>
+                        <td>
+                            <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer ce locataire ?');">
+                                <input type="hidden" name="id_locataire" value="<?= htmlspecialchars($loc['id_locataire']) ?>">
+                                <button type="submit" name="delete_locataire">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
