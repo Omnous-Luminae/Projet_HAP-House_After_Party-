@@ -9,7 +9,7 @@ require_once __DIR__ . '/Projet_HAP(House_After_Party)/config/db.php';
 <head>
     <meta charset="UTF-8">
     <title>House After Party</title>
-    <link rel="stylesheet" href="Projet_HAP(House_After_Party)/styles/style.css">
+    <link rel="stylesheet" href="Projet_HAP(House_After_Party)/Css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
