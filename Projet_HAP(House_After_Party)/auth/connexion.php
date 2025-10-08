@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                     $_SESSION['user_name'] = $user['nom_locataire'];
                     // Régénérer le captcha après connexion réussie
                     unset($_SESSION['captcha_num1'], $_SESSION['captcha_num2'], $_SESSION['captcha_sum']);
-                    header('Location: ../index.php');
+                    header('Location: /index.php');
                     exit;
                 } else {
                     $message = "Email ou mot de passe incorrect.";

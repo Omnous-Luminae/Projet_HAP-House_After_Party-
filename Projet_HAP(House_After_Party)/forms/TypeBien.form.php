@@ -30,18 +30,18 @@ if(isset($_POST['delete_type_bien']) && isset($_POST['id_type_bien'])){
     }
 }
 
-        // Modification d'une saison
+        // Modification d'un type de bien
         if (isset($_POST['edit_type_bien']) && isset($_POST['id_type_bien']) && isset($_POST['lib_type_bien_edit'])) {
             $id = intval($_POST['id_type_bien']);
             $lib_type_bien_edit = trim($_POST['lib_type_bien_edit']);
             if ($lib_type_bien_edit !== '') {
                 if ($typebienobj->updateTypeBien($id, $lib_type_bien_edit)) {
-                    $typeBienMessage = "Saison modifiée avec succès.";
+                    $typeBienMessage = "Type de bien modifié avec succès.";
                 } else {
                     $typeBienMessage = "Erreur lors de la modification.";
-                }  
+                }
             }
-        }         
+        }
         
 $typesBien = $typebienobj->readAllTypeBien();
     }
@@ -57,7 +57,7 @@ $typesBien = $typebienobj->readAllTypeBien();
 <html lang="fr">
     <head>
     <meta charset="UTF-8">
-    <title>Gestion des Saisons</title>
+    <title>Gestion des Types de Bien</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Montserrat', Arial, sans-serif; background: #f7f7f9; margin: 0; }
@@ -78,7 +78,7 @@ $typesBien = $typebienobj->readAllTypeBien();
 </head>
 <body>
     <div class="container">
-        <a href="/index.php" class="back-link">&larr; Retour à l'accueil</a>
+        <a href="../../../../index.php" class="back-link">&larr; Retour à l'accueil</a>
         <h2>Gestion des Types de Bien</h2>
         <?php if ($typeBienMessage): ?>
             <div class="typebien-success"><?= htmlspecialchars($typeBienMessage) ?></div>

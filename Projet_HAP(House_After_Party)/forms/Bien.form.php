@@ -9,11 +9,11 @@ try {
         $bienObj = new Biens(null, null, null, null, null, null, null, null, null, null, $pdo);
 
         // Ajout d'un bien
-        if (isset($_POST['add_bien'])) {
+        if (isset($_POST['add_biens'])) {
             $nom_biens = trim($_POST['nom_biens'] ?? '');
             if ($nom_biens !== '') {
-                if ($biensObj->createBiens($nom_biens, null, null, null, null, null)) {
-                    $bienMessage = "Bien ajoutée avec succès.";
+                if ($bienObj->createBiens($nom_biens, null, null, null, null, null)) {
+                    $bienMessage = "Bien ajouté avec succès.";
                 } else {
                     $bienMessage = "Erreur lors de l'ajout.";
                 }
@@ -21,10 +21,10 @@ try {
         }
 
         // Suppression d'un bien
-        if (isset($_POST['delete_bien']) && isset($_POST['id_biens'])) {
+        if (isset($_POST['delete_biens']) && isset($_POST['id_biens'])) {
             $id = intval($_POST['id_biens']);
             if ($bienObj->deleteBiens($id)) {
-                $bienMessage = "Bien supprimée avec succès.";
+                $bienMessage = "Bien supprimé avec succès.";
             } else {
                 $bienMessage = "Erreur lors de la suppression.";
             }
@@ -36,7 +36,7 @@ try {
             $nom_biens_edit = trim($_POST['nom_biens_edit']);
             if ($nom_biens_edit !== '') {
                 if ($bienObj->updateBiens($id, $nom_biens_edit, null, null, null, null, null)) {
-                    $bienMessage = "Bien modifiée avec succès.";
+                    $bienMessage = "Bien modifié avec succès.";
                 } else {
                     $bienMessage = "Erreur lors de la modification.";
                 }
@@ -44,7 +44,7 @@ try {
         }
 
         // Récupération des biens
-        $bien = $bienObj->getAllBiens();
+        $biens = $bienObj->getAllBiens();
     }
 } catch (Exception $e) {
     $saisonMessage = "Erreur : " . $e->getMessage();
@@ -75,16 +75,16 @@ try {
 </head>
 <body>
     <div class="container">
-        <a href="/index.php" class="back-link">&larr; Retour à l'accueil</a>
+        <a href="../../../../index.php" class="back-link">&larr; Retour à l'accueil</a>
         <h2>Gestion des biens</h2>
         <?php if ($bienMessage): ?>
-            <div class="biens-success"><?= htmlspecialchars($bienMessage) ?></div>
+            <div class="bien-success"><?= htmlspecialchars($bienMessage) ?></div>
         <?php endif; ?>
         <form method="post">
             <input type="text" id="nom_biens" name="nom_biens" placeholder="Nom du bien" required>
             <input type="submit" name="add_biens" value="Ajouter">
         </form>
-        <div class="saison-list">
+        <div class="bien-list">
             <table>
                 <tr>
                     <th>ID</th>
@@ -102,7 +102,7 @@ try {
                                     <button type="submit" name="edit_biens">Enregistrer</button>
                                 </form>
                             <?php else: ?>
-                                <?= htmlspecialchars($bien['lib_saison']) ?>
+                                <?= htmlspecialchars($bien['nom_biens']) ?>
                             <?php endif; ?>
                         </td>
                         <td>
