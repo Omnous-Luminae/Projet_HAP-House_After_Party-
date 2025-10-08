@@ -57,6 +57,40 @@ try {
             }
         }
 
+        // Modification d'un locataire
+        if (isset($_POST['edit_locataire']) && isset($_POST['id_locataire'])) {
+            $id = intval($_POST['id_locataire']);
+            $type = $_POST['type_locataire_edit'] ?? 'physique';
+            $nom = trim($_POST['nom_edit'] ?? '');
+            $prenom = trim($_POST['prenom_edit'] ?? '');
+            $email = trim($_POST['email_edit'] ?? '');
+            $tel = trim($_POST['tel_edit'] ?? '');
+            $date_naissance = $_POST['date_naissance_edit'] ?? null;
+            $mdp = $_POST['mdp_edit'] ?? '';
+            $rue = trim($_POST['rue_edit'] ?? '');
+            $complement = trim($_POST['complement_edit'] ?? '');
+            $siret = trim($_POST['siret_edit'] ?? '');
+            $raison_sociale = trim($_POST['raison_sociale_edit'] ?? '');
+
+            if ($type === 'physique') {
+                if ($nom && $prenom && $email && $tel && $date_naissance && $mdp && $rue) {
+                    if ($locataireObj->updateLocataire($id, $nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement, null, null)) {
+                        $message = "Locataire (personne physique) modifié avec succès.";
+                    } else {
+                        $message = "Erreur lors de la modification.";
+                    }
+                }
+            } else {
+                if ($nom && $prenom && $email && $tel && $date_naissance && $mdp && $rue && $siret && $raison_sociale) {
+                    if ($locataireObj->updateLocataire($id, $nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement, $siret, $raison_sociale)) {
+                        $message = "Locataire (personne morale) modifié avec succès.";
+                    } else {
+                        $message = "Erreur lors de la modification.";
+                    }
+                }
+            }
+        }
+
         // Récupération des locataires
         $locataires = $locataireObj->getAllLocataire();
     }
@@ -100,7 +134,7 @@ try {
 </head>
 <body>
     <div class="container">
-        <a href="/index.php" class="back-link">&larr; Retour à l'accueil</a>
+        <a href="../../../../index.php" class="back-link">&larr; Retour à l'accueil</a>
         <h2>Gestion des Locataires</h2>
         <?php if ($message): ?>
             <div class="success"><?= htmlspecialchars($message) ?></div>
@@ -143,17 +177,42 @@ try {
                         <td><?= htmlspecialchars($loc['nom_locataire']) ?></td>
                         <td><?= htmlspecialchars($loc['prenom_locataire']) ?></td>
                         <td><?= htmlspecialchars($loc['email_locataire']) ?></td>
-                        <td><?= htmlspecialchars($loc['telephone_locataire'] ?? $loc['tel_locataire'] ?? $loc['tel'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($loc['date_naissance'] ?? $loc['date_naissance_locataire'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($loc['telephone_locataire']) ?></td>
+                        <td><?= htmlspecialchars($loc['date_naissance_locataire']) ?></td>
                         <td><?= htmlspecialchars($loc['rue_locataire']) ?></td>
-                        <td><?= htmlspecialchars($loc['complement_locataire'] ?? $loc['complement_rue_locataire'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($loc['siret'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($loc['raison_sociale'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($loc['complement_locataire']) ?></td>
+                        <td><?= htmlspecialchars($loc['siret']) ?></td>
+                        <td><?= htmlspecialchars($loc['raison_sociale']) ?></td>
                         <td>
-                            <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer ce locataire ?');">
-                                <input type="hidden" name="id_locataire" value="<?= htmlspecialchars($loc['id_locataire']) ?>">
-                                <button type="submit" name="delete_locataire">Supprimer</button>
-                            </form>
+                            <?php if (isset($_POST['edit_mode']) && $_POST['edit_mode'] == $loc['id_locataire']): ?>
+                                <form method="post" style="display:inline;">
+                                    <input type="hidden" name="id_locataire" value="<?= htmlspecialchars($loc['id_locataire']) ?>">
+                                    <select name="type_locataire_edit" required>
+                                        <option value="physique" <?= (isset($loc) && $loc['siret'] == '' ? 'selected' : '') ?>>Physique</option>
+                                        <option value="morale" <?= (isset($loc) && $loc['siret'] != '' ? 'selected' : '') ?>>Morale</option>
+                                    </select>
+                                    <input type="text" name="nom_edit" value="<?= htmlspecialchars($loc['nom_locataire']) ?>" required>
+                                    <input type="text" name="prenom_edit" value="<?= htmlspecialchars($loc['prenom_locataire']) ?>" required>
+                                    <input type="email" name="email_edit" value="<?= htmlspecialchars($loc['email_locataire']) ?>" required>
+                                    <input type="text" name="tel_edit" value="<?= htmlspecialchars($loc['telephone_locataire']) ?>" required>
+                                    <input type="date" name="date_naissance_edit" value="<?= htmlspecialchars($loc['date_naissance_locataire']) ?>" required>
+                                    <input type="password" name="mdp_edit" placeholder="Nouveau mot de passe" required>
+                                    <input type="text" name="rue_edit" value="<?= htmlspecialchars($loc['rue_locataire']) ?>" required>
+                                    <input type="text" name="complement_edit" value="<?= htmlspecialchars($loc['complement_locataire']) ?>">
+                                    <input type="text" class="morale-fields" name="siret_edit" value="<?= htmlspecialchars($loc['siret']) ?>" placeholder="SIRET">
+                                    <input type="text" class="morale-fields" name="raison_sociale_edit" value="<?= htmlspecialchars($loc['raison_sociale']) ?>" placeholder="Raison sociale">
+                                    <button type="submit" name="edit_locataire">Enregistrer</button>
+                                </form>
+                            <?php else: ?>
+                                <form method="post" style="display:inline;">
+                                    <input type="hidden" name="edit_mode" value="<?= htmlspecialchars($loc['id_locataire']) ?>">
+                                    <button type="submit">Modifier</button>
+                                </form>
+                                <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer ce locataire ?');">
+                                    <input type="hidden" name="id_locataire" value="<?= htmlspecialchars($loc['id_locataire']) ?>">
+                                    <button type="submit" name="delete_locataire">Supprimer</button>
+                                </form>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

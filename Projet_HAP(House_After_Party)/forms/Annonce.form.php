@@ -182,7 +182,7 @@ try {
 </head>
 <body>
     <div class="container">
-        <a href="/index.php">&larr; Retour</a>
+        <a href="../../../../index.php">&larr; Retour</a>
         <h2>Créer une annonce</h2>
         <?php if ($message): ?>
             <div class="message"><?= $message ?></div>
