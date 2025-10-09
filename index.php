@@ -23,10 +23,10 @@ require_once __DIR__ . '/Projet_HAP(House_After_Party)/config/db.php';
         </a>
         <nav>
             <a href="#" class="active">🏠 Accueil</a>
-            <a href="#">📅 Annonces</a>
-            <a href="#">🗺️ Carte</a>
-            <a href="#">🎵 Boîtes de nuit</a>
-            <a href="#">👤 Blog</a>
+            <a href="Projet_HAP(House_After_Party)/forms/Annonce.form.php">📅 Annonces</a>
+            <a href="Projet_HAP(House_After_Party)/forms/TypePtsInteret.form.php">🗺️ Carte</a>
+            <a href="Projet_HAP(House_After_Party)/forms/PtsInteret.form.php">🎵 Boîtes de nuit</a>
+            <a href="Projet_HAP(House_After_Party)/forms/Locataires.form.php">👤 Blog</a>
             <a href="Projet_HAP(House_After_Party)/forms/Saison.form.php">🗓️ Saisons</a>
         </nav>
         <a href="Projet_HAP(House_After_Party)/auth/connexion.php" class="btn-login">Se connecter</a>

@@ -12,15 +12,15 @@ private $animal_biens = "";
 private $nb_couchage = "";
 private $pdo;
 
-public function __construct($id_biens,$nom_biens,$rue_biens,$superficie_biens,$description_biens,$animal_biens,$nb_couchage,$pdo){
-    $this->id_biens = $id_biens;
-    $this->nom_biens = $nom_biens;
-    $this->rue_biens = $rue_biens;
-    $this->superficie_biens = $superficie_biens;
-    $this->description_biens = $description_biens;
-    $this->animal_biens = $animal_biens;
-    $this->nb_couchage = $nb_couchage;
+public function __construct($pdo, $biensData = []){
     $this->pdo = $pdo;
+    $this->id_biens = $biensData['id_biens'] ?? "";
+    $this->nom_biens = $biensData['nom_biens'] ?? "";
+    $this->rue_biens = $biensData['rue_biens'] ?? "";
+    $this->superficie_biens = $biensData['superficie_biens'] ?? "";
+    $this->description_biens = $biensData['description_biens'] ?? "";
+    $this->animal_biens = $biensData['animal_biens'] ?? "";
+    $this->nb_couchage = $biensData['nb_couchage'] ?? "";
 }
 
 public function getIdBiens() {return $this->id_biens;}

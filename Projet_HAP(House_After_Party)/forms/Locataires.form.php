@@ -93,7 +93,7 @@ try {
         }
 
         // Récupération des locataires avec nom de commune
-        $stmt = $pdo->query("SELECT l.*, c.nom_commune FROM Locataire l JOIN Commune c ON l.id_commune = c.id_commune");
+    $stmt = $pdo->query("SELECT l.*, l.date_naissance AS date_naissance_locataire, c.nom_commune FROM Locataire l JOIN Commune c ON l.id_commune = c.id_commune");
         $locataires = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 } catch (Exception $e) {
@@ -110,21 +110,27 @@ try {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <style>
-        body { font-family: 'Montserrat', Arial, sans-serif; background: #f7f7f9; margin: 0; }
-        .container { max-width: 900px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 2px 16px rgba(80,0,80,0.06); padding: 40px 30px; }
+    body { font-family: 'Montserrat', Arial, sans-serif; background: #f7f7f9; margin: 0; }
+    .container { max-width: 1100px; width: calc(100% - 40px); margin: 24px auto; background: #fff; border-radius: 18px; box-shadow: 0 2px 16px rgba(80,0,80,0.06); padding: 24px; }
         h2 { text-align: center; margin-bottom: 28px; }
         form { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; }
         input, select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
         input[type="submit"], button { background: #a100b8; color: #fff; border: none; border-radius: 6px; padding: 8px 18px; font-weight: 600; cursor: pointer; }
         input[type="submit"]:hover, button:hover { background: #4b006e; }
-        .locataire-list { margin-top: 20px; }
-        .locataire-list table { border-collapse: collapse; width: 100%; }
-        .locataire-list th, .locataire-list td { border: 1px solid #ccc; padding: 8px 12px; text-align: center; }
+    .locataire-list { margin-top: 20px; overflow-x: auto; }
+    .locataire-list table { border-collapse: collapse; width: 100%; min-width: 960px; }
+    .locataire-list th, .locataire-list td { border: 1px solid #ccc; padding: 10px 14px; text-align: center; }
         .locataire-list th { background: #f3e6fa; }
         .success { color: green; text-align: center; margin-bottom: 18px; }
         .back-link { display: block; margin-bottom: 18px; color: #a100b8; text-decoration: none; font-weight: 600; }
         .back-link:hover { text-decoration: underline; }
         .morale-fields { display: none; }
+        @media (max-width: 720px) {
+            .container { padding: 16px; }
+            form { gap: 8px; }
+            .locataire-list table { min-width: 780px; }
+            input, select { font-size: 14px; }
+        }
     </style>
     <script>
         function toggleLocataireFields() {
@@ -138,7 +144,7 @@ try {
             $("#commune").autocomplete({
                 source: function(request, response) {
                     $.ajax({
-                        url: "api/search_communes.php",
+                        url: "../api/search_communes.php",
                         dataType: "json",
                         data: {
                             q: request.term
@@ -161,22 +167,11 @@ try {
             });
 
             $("#add_form").on('submit', function(e) {
-                e.preventDefault();
                 if (!$("#id_commune").val()) {
-                    alert("Veuillez sélectionner une commune valide.");
-                    return;
+                    alert("Veuillez sélectionner une commune valide dans la liste d'autocomplétion.");
+                    e.preventDefault();
+                    return false;
                 }
-                $.ajax({
-                    type: "POST",
-                    url: "forms/Locataires.form.php",
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        location.reload();
-                    },
-                    error: function() {
-                        alert("Erreur lors de l'ajout du locataire.");
-                    }
-                });
             });
 
         });
@@ -184,7 +179,7 @@ try {
 </head>
 <body>
     <div class="container">
-        <a href="/../index.php" class="back-link">&larr; Retour à l'accueil</a>
+        <a href="../../index.php" class="back-link">&larr; Retour à l'accueil</a>
         <h2>Gestion des Locataires</h2>
         <?php if ($message): ?>
             <div class="success"><?= htmlspecialchars($message) ?></div>
@@ -236,6 +231,7 @@ try {
                         <td><?= htmlspecialchars($loc['complement_locataire']) ?></td>
                         <td><?= htmlspecialchars($loc['siret']) ?></td>
                         <td><?= htmlspecialchars($loc['raison_sociale']) ?></td>
+                        <td><?= htmlspecialchars($loc['nom_commune']) ?></td>
                         <td>
                             <?php if (isset($_POST['edit_mode']) && $_POST['edit_mode'] == $loc['id_locataire']): ?>
                                 <form method="post" style="display:inline;">
