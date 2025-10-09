@@ -25,11 +25,12 @@ try {
             $complement = trim($_POST['complement'] ?? '');
             $siret = trim($_POST['siret'] ?? '');
             $raison_sociale = trim($_POST['raison_sociale'] ?? '');
+            $id_commune = intval($_POST['id_commune'] ?? 1);
 
             if ($type === 'physique') {
                 if ($nom && $prenom && $email && $tel && $date_naissance && $mdp && $rue) {
                     $pp = new PersonnePhysique(null, $nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement);
-                    if ($locataireObj->createLocataire($nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement, null, null)) {
+                    if ($locataireObj->createLocataire($nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement, null, null, $id_commune)) {
                         $message = "Locataire (personne physique) ajouté avec succès.";
                     } else {
                         $message = "Erreur lors de l'ajout.";
@@ -38,7 +39,7 @@ try {
             } else {
                 if ($nom && $prenom && $email && $tel && $date_naissance && $mdp && $rue && $siret && $raison_sociale) {
                     $pm = new PersonneMorale(null, $nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement, $siret, $raison_sociale);
-                    if ($locataireObj->createLocataire($nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement, $siret, $raison_sociale)) {
+                    if ($locataireObj->createLocataire($nom, $prenom, $email, $tel, $date_naissance, $mdp, $rue, $complement, $siret, $raison_sociale, $id_commune)) {
                         $message = "Locataire (personne morale) ajouté avec succès.";
                     } else {
                         $message = "Erreur lors de l'ajout.";
@@ -91,8 +92,9 @@ try {
             }
         }
 
-        // Récupération des locataires
-        $locataires = $locataireObj->getAllLocataire();
+        // Récupération des locataires avec nom de commune
+        $stmt = $pdo->query("SELECT l.*, c.nom_commune FROM Locataire l JOIN Commune c ON l.id_commune = c.id_commune");
+        $locataires = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 } catch (Exception $e) {
     $message = "Erreur : " . $e->getMessage();
@@ -104,6 +106,9 @@ try {
     <meta charset="UTF-8">
     <title>Gestion des Locataires</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <style>
         body { font-family: 'Montserrat', Arial, sans-serif; background: #f7f7f9; margin: 0; }
         .container { max-width: 900px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 2px 16px rgba(80,0,80,0.06); padding: 40px 30px; }
@@ -129,17 +134,62 @@ try {
         window.addEventListener('DOMContentLoaded', function() {
             document.getElementById('type_locataire').addEventListener('change', toggleLocataireFields);
             toggleLocataireFields();
+
+            $("#commune").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "api/search_communes.php",
+                        dataType: "json",
+                        data: {
+                            q: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function(event, ui) {
+                    $("#commune").val(ui.item.label);
+                    $("#id_commune").val(ui.item.id);
+                    return false;
+                }
+            });
+
+            $("#commune").on('input', function() {
+                $("#id_commune").val('');
+            });
+
+            $("#add_form").on('submit', function(e) {
+                e.preventDefault();
+                if (!$("#id_commune").val()) {
+                    alert("Veuillez sélectionner une commune valide.");
+                    return;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "forms/Locataires.form.php",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        location.reload();
+                    },
+                    error: function() {
+                        alert("Erreur lors de l'ajout du locataire.");
+                    }
+                });
+            });
+
         });
     </script>
 </head>
 <body>
     <div class="container">
-        <a href="../index.php" class="back-link">&larr; Retour à l'accueil</a>
+        <a href="/../index.php" class="back-link">&larr; Retour à l'accueil</a>
         <h2>Gestion des Locataires</h2>
         <?php if ($message): ?>
             <div class="success"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
-        <form method="post">
+        <form method="post" id="add_form">
             <select name="type_locataire" id="type_locataire" required>
                 <option value="physique">Personne physique</option>
                 <option value="morale">Personne morale</option>
@@ -152,12 +202,14 @@ try {
             <input type="password" name="mdp" placeholder="Mot de passe" required>
             <input type="text" name="rue" placeholder="Rue" required>
             <input type="text" name="complement" placeholder="Complément d'adresse">
+            <input type="text" id="commune" placeholder="Commune" required>
+            <input type="hidden" id="id_commune" name="id_commune">
             <input type="text" class="morale-fields" name="siret" placeholder="SIRET">
             <input type="text" class="morale-fields" name="raison_sociale" placeholder="Raison sociale">
             <input type="submit" name="add_locataire" value="Ajouter">
         </form>
         <div class="locataire-list">
-            <table>
+            <table id="locataires_table">
                 <tr>
                     <th>ID</th>
                     <th>Nom</th>
@@ -169,6 +221,7 @@ try {
                     <th>Complément</th>
                     <th>SIRET</th>
                     <th>Raison sociale</th>
+                    <th>Commune</th>
                     <th>Actions</th>
                 </tr>
                 <?php foreach ($locataires as $loc): ?>

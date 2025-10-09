@@ -75,7 +75,7 @@ try {
 </head>
 <body>
     <div class="container">
-        <a href="../index.php" class="back-link">&larr; Retour à l'accueil</a>
+        <a href="/../index.php" class="back-link">&larr; Retour à l'accueil</a>
         <h2>Gestion des biens</h2>
         <?php if ($bienMessage): ?>
             <div class="bien-success"><?= htmlspecialchars($bienMessage) ?></div>

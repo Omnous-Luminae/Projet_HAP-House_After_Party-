@@ -78,7 +78,7 @@ $typesBien = $typebienobj->readAllTypeBien();
 </head>
 <body>
     <div class="container">
-        <a href="../index.php" class="back-link">&larr; Retour à l'accueil</a>
+        <a href="/../index.php" class="back-link">&larr; Retour à l'accueil</a>
         <h2>Gestion des Types de Bien</h2>
         <?php if ($typeBienMessage): ?>
             <div class="typebien-success"><?= htmlspecialchars($typeBienMessage) ?></div>
