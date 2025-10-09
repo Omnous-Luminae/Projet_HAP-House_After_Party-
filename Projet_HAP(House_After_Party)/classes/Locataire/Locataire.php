@@ -15,7 +15,7 @@ Class Locataire{
     private $tel_locataire = "";
     private $pdo;
 
-    public function __construct($id_locataire, $nom_locataire, $prenom_locataire, $email_locataire, $tel_locataire, $date_naissance_locataire, $mdp_locataire, $rue_locataire, $complement_rue_locataire,$pdo){
+    public function __construct($id_locataire, $nom_locataire, $prenom_locataire, $email_locataire, $tel_locataire, $date_naissance_locataire, $mdp_locataire, $rue_locataire, $complement_rue_locataire, $pdo = null){
         $this->id_locataire = $id_locataire;
         $this->nom_locataire = $nom_locataire;
         $this->prenom_locataire = $prenom_locataire;
@@ -88,18 +88,18 @@ Class Locataire{
     public function updateLocataire($id_locataire, $nom_locataire, $prenom_locataire,$email_locataire, $tel_locataire, $date_naissance_locataire, $mdp_locataire, $rue_locataire, $complement_locataire, $siret = null, $raison_sociale = null)
     {
         $stmt = $this->pdo->prepare(
-            "UPDATE Locataire SET nom_locataire = :nom, prenom_locataire = :prenom, email_locataire = :email, tel_locataire = :tel, date_naissance_locataire = :date_naissance, mdp_locataire = :mdp, rue_locataire = :rue, complement_rue_locataire = :complement, siret = :siret, raison_sociale = :raison_sociale WHERE id_locataire = :id"
+            "UPDATE Locataire SET nom_locataire = :nom, prenom_locataire = :prenom, email_locataire = :email, telephone_locataire = :tel, date_naissance = :date_naissance, password_locataire = :mdp, rue_locataire = :rue, complement_locataire = :complement, siret = :siret, raison_sociale = :raison_sociale WHERE id_locataire = :id"
         );
         return $stmt->execute([
-            'id_locataire' => $id_locataire,
-            'nom_locataire' => $nom_locataire  ,
-            'prenom_locataire' => $prenom_locataire,
-            'email_locataire' => $email_locataire,
-            'tel_locataire' => $tel_locataire,
-            'date_naissance_locataire' => $date_naissance_locataire,
-            'mdp_locataire' => $mdp_locataire,
-            'rue_locataire' => $rue_locataire,
-            'complement_locataire' => $complement_locataire,
+            'id' => $id_locataire,
+            'nom' => $nom_locataire,
+            'prenom' => $prenom_locataire,
+            'email' => $email_locataire,
+            'tel' => $tel_locataire,
+            'date_naissance' => $date_naissance_locataire,
+            'mdp' => $mdp_locataire,
+            'rue' => $rue_locataire,
+            'complement' => $complement_locataire,
             'siret' => $siret,
             'raison_sociale' => $raison_sociale
         ]);

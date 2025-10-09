@@ -1,12 +1,13 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../classes/Biens/Biens.php';
 
 $bienMessage = '';
 $bien = [];
 try {
     $pdo = $pdo ?? null;
     if ($pdo) {
-        $bienObj = new Biens(null, null, null, null, null, null, null, null, null, null, $pdo);
+        $bienObj = new Biens($pdo);
 
         // Ajout d'un bien
         if (isset($_POST['add_biens'])) {
