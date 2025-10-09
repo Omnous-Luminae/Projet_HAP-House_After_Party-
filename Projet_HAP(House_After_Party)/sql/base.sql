@@ -59,7 +59,7 @@ Create table if not exists Locataire(
     prenom_locataire varchar(30) not null,
     date_naissance date not null,
     email_locataire varchar(50) not null,
-    password_locataire varchar(20) not null,
+    password_locataire varchar(255) not null,
     telephone_locataire varchar(15) not null,
     rue_locataire varchar(50) not null,
     complement_locataire varchar(50),
@@ -156,30 +156,12 @@ CREATE TABLE IF NOT EXISTS Compose(
     foreign key (id_prestation) references Prestation(id_prestation)
 );
 
-CREATE TABLE photos (
 
-    id INT AUTO_INCREMENT PRIMARY KEY,
-
-    chemin VARCHAR(255) NOT NULL,
-
-    date_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-
+Create table if not exists Animateur(
+    id_animateur int primary key auto_increment not null,
+    nom_animateur varchar(30) not null,
+    prenom_animateur varchar(30) not null,
+    email_animateur varchar(50) not null,
+    password_animateur varchar(255) not null
 );
-
--- Exemple d'index pour accélérer les recherches par code postal ou nom
-CREATE INDEX idx_cp_commune ON Commune(cp_commune);
-CREATE INDEX idx_nom_commune ON Commune(nom_commune);
-
-INSERT INTO Commune (
-    code_insee, nom_commune, cp_commune, latitude_commune, longitude_commune,
-    ville_slug, ville_nom_reel, ville_nom_soundex, ville_nom_metaphone,
-    ville_departement, ville_arrondissement, ville_canton, ville_code_commune, ville_commune,
-    ville_surface, ville_zmin, ville_zmax
-)
-SELECT
-    ville_code_commune, ville_nom, ville_code_postal, ville_latitude_deg, ville_longitude_deg,
-    ville_slug, ville_nom_reel, ville_nom_soundex, ville_nom_metaphone,
-    ville_departement, ville_arrondissement, ville_canton, ville_code_commune, ville_commune,
-    ville_surface, ville_zmin, ville_zmax
-FROM villes_france_free;
 

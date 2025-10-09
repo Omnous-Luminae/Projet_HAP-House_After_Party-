@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../classes/Locataire/Locataire.php';
+require_once __DIR__ . '/../classes/Animateur/Animateur.php';
 
 session_start();
 
@@ -24,20 +25,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $pdo = $pdo ?? null;
             if ($pdo) {
                 $locataireObj = new Locataire(null, null, null, null, null, null, null, null, null, $pdo);
+                $animateurObj = new Animateur($pdo);
+
+                // Vérifier dans Locataire
                 $stmt = $pdo->prepare("SELECT * FROM Locataire WHERE email_locataire = :email");
                 $stmt->execute(['email' => $email]);
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($user && password_verify($password, $user['password_locataire'])) {
-                    // Authentification réussie
+                if ($user && password_verify($password, $user['password_locataire'])) {
+                    // Authentification réussie Locataire
                     $_SESSION['user_id'] = $user['id_locataire'];
                     $_SESSION['user_name'] = $user['nom_locataire'];
-                    // Régénérer le captcha après connexion réussie
+                    $_SESSION['role'] = 'locataire';
                     unset($_SESSION['captcha_num1'], $_SESSION['captcha_num2'], $_SESSION['captcha_sum']);
                     header('Location: /index.php');
                     exit;
                 } else {
-                    $message = "Email ou mot de passe incorrect.";
+                    // Vérifier dans Animateur
+                    $animateur = $animateurObj->authenticateAnimateur($email, $password);
+                    if ($animateur) {
+                        $_SESSION['user_id'] = $animateur['id_administrateur'];
+                        $_SESSION['user_name'] = $animateur['nom_administrateur'];
+                        $_SESSION['role'] = 'animateur';
+                        unset($_SESSION['captcha_num1'], $_SESSION['captcha_num2'], $_SESSION['captcha_sum']);
+                        header('Location: /index.php');
+                        exit;
+                    } else {
+                        $message = "Email ou mot de passe incorrect.";
+                    }
                 }
             } else {
                 $message = "Erreur de connexion à la base de données.";
