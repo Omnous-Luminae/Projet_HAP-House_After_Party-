@@ -56,29 +56,8 @@ try {
     $message = "Erreur : " . $e->getMessage();
 }
 ?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Liste des Communes</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Montserrat', Arial, sans-serif; background: #f7f7f9; margin: 0; }
-        .container { max-width: 1000px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 2px 16px rgba(80,0,80,0.06); padding: 40px 30px; }
-        h2 { text-align: center; margin-bottom: 28px; }
-        .commune-list { margin-top: 20px; }
-        .commune-list table { border-collapse: collapse; width: 100%; }
-        .commune-list th, .commune-list td { border: 1px solid #ccc; padding: 8px 12px; text-align: center; }
-        .commune-list th { background: #f3e6fa; }
-        .success { color: green; text-align: center; margin-bottom: 18px; }
-        .back-link { display: block; margin-bottom: 18px; color: #a100b8; text-decoration: none; font-weight: 600; }
-        .back-link:hover { text-decoration: underline; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <a href="/../index.php" class="back-link">&larr; Retour à l'accueil</a>
-        <h2>Liste des Communes (premières 100)</h2>
+<div class="form-section">
+    <h3>Liste des Communes (premières 100)</h3>
         <?php if ($message): ?>
             <div class="success"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
@@ -158,6 +137,4 @@ try {
 
             <button type="submit"><?= $editCommune ? 'Modifier' : 'Ajouter' ?> Commune</button>
         </form>
-    </div>
-</body>
-</html>
+</div>

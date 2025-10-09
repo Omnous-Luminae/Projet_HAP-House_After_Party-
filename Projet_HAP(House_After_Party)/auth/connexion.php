@@ -44,11 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                     // Vérifier dans Animateur
                     $animateur = $animateurObj->authenticateAnimateur($email, $password);
                     if ($animateur) {
-                        $_SESSION['user_id'] = $animateur['id_administrateur'];
-                        $_SESSION['user_name'] = $animateur['nom_administrateur'];
+                        $_SESSION['user_id'] = $animateur['id_animateur'];
+                        $_SESSION['user_name'] = $animateur['nom_animateur'];
                         $_SESSION['role'] = 'animateur';
                         unset($_SESSION['captcha_num1'], $_SESSION['captcha_num2'], $_SESSION['captcha_sum']);
-                        header('Location: /index.php');
+                        header('Location: /apropos.php');
                         exit;
                     } else {
                         $message = "Email ou mot de passe incorrect.";
