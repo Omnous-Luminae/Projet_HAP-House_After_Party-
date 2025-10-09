@@ -134,7 +134,7 @@ try {
 </head>
 <body>
     <div class="container">
-        <a href="../../../../index.php" class="back-link">&larr; Retour à l'accueil</a>
+        <a href="../index.php" class="back-link">&larr; Retour à l'accueil</a>
         <h2>Gestion des Locataires</h2>
         <?php if ($message): ?>
             <div class="success"><?= htmlspecialchars($message) ?></div>

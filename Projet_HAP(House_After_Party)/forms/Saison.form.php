@@ -76,7 +76,7 @@ try {
 </head>
 <body>
     <div class="container">
-        <a href="../../../../index.php" class="back-link">&larr; Retour à l'accueil</a>
+        <a href="../index.php" class="back-link">&larr; Retour à l'accueil</a>
         <h2>Gestion des Saisons</h2>
         <?php if ($saisonMessage): ?>
             <div class="saison-success"><?= htmlspecialchars($saisonMessage) ?></div>
