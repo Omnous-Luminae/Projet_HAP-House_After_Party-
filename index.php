@@ -29,7 +29,18 @@ require_once __DIR__ . '/Projet_HAP(House_After_Party)/config/db.php';
             <a href="Projet_HAP(House_After_Party)/forms/Locataires.form.php">👤 Blog</a>
             <a href="Projet_HAP(House_After_Party)/forms/Saison.form.php">🗓️ Saisons</a>
         </nav>
-        <a href="Projet_HAP(House_After_Party)/auth/connexion.php" class="btn-login">Se connecter</a>
+        <?php
+        session_start();
+        if (isset($_SESSION['user_name'])) {
+            echo '<span class="welcome-msg">Bienvenue, ' . htmlspecialchars($_SESSION['user_name']) . '</span>';
+            if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+                echo '<a href="Projet_HAP(House_After_Party)/admin/dashboard.php" class="btn-admin">Admin Dashboard</a>';
+            }
+            echo '<a href="Projet_HAP(House_After_Party)/auth/logout.php" class="btn-logout">Se déconnecter</a>';
+        } else {
+            echo '<a href="Projet_HAP(House_After_Party)/auth/connexion.php" class="btn-login">Se connecter</a>';
+        }
+        ?>
     </header>
     <section class="hero">
         <h1>House After Party</h1>
