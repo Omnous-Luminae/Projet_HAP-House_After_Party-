@@ -54,18 +54,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     <meta charset="UTF-8">
     <title>Inscription</title>
     <link rel="stylesheet" href="../Css/style.css">
+    <script>
+        function toggleMoraleFields() {
+            const type = document.querySelector('input[name="type"]:checked').value;
+            document.getElementById('morale-fields').style.display = (type === 'morale') ? 'block' : 'none';
+            document.getElementById('morale-siret').style.display = (type === 'morale') ? 'block' : 'none';
+        }
+    </script>
 </head>
 <body>
-    <div class="container mt-4">
+    <div class="auth-container">
         <h2>Inscription</h2>
-        <?php echo $message; ?>
-        <form method="POST">
+        <?php if ($message): ?>
+            <div class="message <?php echo strpos($message, 'réussie') !== false ? 'success' : 'error'; ?>">
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        <?php endif; ?>
+        <form method="POST" class="auth-form">
             <div class="form-group">
-                <label>Type de personne</label><br>
-                <input type="radio" id="physique" name="type" value="physique" required>
-                <label for="physique">Personne Physique</label><br>
-                <input type="radio" id="morale" name="type" value="morale" required>
-                <label for="morale">Personne Morale</label>
+                <label>Type de personne</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" id="physique" name="type" value="physique" required onchange="toggleMoraleFields()">
+                        Personne Physique
+                    </label>
+                    <label>
+                        <input type="radio" id="morale" name="type" value="morale" required onchange="toggleMoraleFields()">
+                        Personne Morale
+                    </label>
+                </div>
             </div>
             <div class="form-group">
                 <label>Nom</label>
@@ -74,24 +91,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             <div class="form-group">
                 <label>Prénom</label>
                 <input type="text" class="form-control" name="prenom_locataire" required>
-    </div>
+            </div>
             <div class="form-group">
                 <label>Date de Naissance</label>
                 <input type="date" class="form-control" name="date_naissance_locataire" required>
             </div>
-</body>
+            <div class="form-group">
                 <label>Email</label>
                 <input type="email" class="form-control" name="email_locataire" required>
             </div>
-</html>                <label>Téléphone</label>
-                <input type="tel" class="form-control" name="tel_locataire">
+            <div class="form-group">
+                <label>Téléphone</label>
+                <input type="tel" class="form-control" name="tel_locataire" required>
+            </div>
             <div class="form-group">
                 <label>Rue</label>
-                <input type="text" class="form-control" name="rue_locataire">
+                <input type="text" class="form-control" name="rue_locataire" required>
             </div>
             <div class="form-group">
                 <label>Complément d'adresse</label>
-                <input type="text" class="form-control" name="complement">
+                <input type="text" class="form-control" name="complement_rue_locataire">
             </div>
             <div class="form-group" id="morale-fields" style="display:none;">
                 <label>Raison Sociale</label>
@@ -111,3 +130,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             </div>
             <button type="submit" name="register" class="btn btn-primary">S'inscrire</button>
         </form>
+        <div class="auth-link">
+            <p>Déjà un compte ? <a href="connexion.php">Connectez-vous ici</a>.</p>
+        </div>
+    </div>
+</body>
+</html>

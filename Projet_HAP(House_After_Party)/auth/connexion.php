@@ -54,47 +54,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 <head>
     <meta charset="UTF-8">
     <title>Connexion</title>
-    <style>
-        .robot-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 18px;
-        }
-        .robot-btn input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
-        }
-        .connexion-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-    </style>
+    <link rel="stylesheet" href="../Css/style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="auth-container">
         <h2>Connexion</h2>
         <?php if ($message): ?>
-            <p style="color: red;"><?= htmlspecialchars($message) ?></p>
+            <div class="message error">
+                <?= htmlspecialchars($message) ?>
+            </div>
         <?php endif; ?>
-        <form method="post" action="">
-            <label for="email">Email :</label><br>
-            <input type="email" id="email" name="email" required><br><br>
+        <form method="post" action="" class="auth-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
 
-            <label for="password">Mot de passe :</label><br>
-            <input type="password" id="password" name="password" required><br><br>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
 
             <div class="robot-btn">
                 <input type="checkbox" id="not_robot" name="not_robot">
                 <label for="not_robot"><strong>Je ne suis pas un robot</strong></label>
             </div>
 
-            <label for="captcha">Combien font <?= $_SESSION['captcha_num1'] ?> + <?= $_SESSION['captcha_num2'] ?> ?</label><br>
-            <input type="number" id="captcha" name="captcha" required><br><br>
+            <div class="form-group">
+                <label for="captcha">Combien font <?= $_SESSION['captcha_num1'] ?> + <?= $_SESSION['captcha_num2'] ?> ?</label>
+                <input type="number" id="captcha" name="captcha" class="form-control" required>
+            </div>
 
-            <input type="submit" class="connexion-btn" name="login" value="Se connecter" disabled>
+            <button type="submit" class="btn btn-primary connexion-btn" name="login" value="Se connecter" disabled>Se connecter</button>
         </form>
-        <p>Pas encore de compte ? <a href="inscription.php">Inscrivez-vous ici</a>.</p>
+        <div class="auth-link">
+            <p>Pas encore de compte ? <a href="inscription.php">Inscrivez-vous ici</a>.</p>
+        </div>
     </div>
     <script>
         // Désactive le bouton tant que la case n'est pas cochée
