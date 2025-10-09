@@ -81,14 +81,14 @@ try {
                 if (!empty($_POST['delete_photo_ids']) && is_array($_POST['delete_photo_ids'])) {
                     $toDelete = array_map('intval', $_POST['delete_photo_ids']);
                     $in = implode(',', array_fill(0, count($toDelete), '?'));
-                    $stmtDel = $pdo->prepare('SELECT lien_photo FROM Photos WHERE id_photos IN (' . $in . ')');
+                    $stmtDel = $pdo->prepare('SELECT lien_photo FROM Photos WHERE id_photo IN (' . $in . ')');
                     $stmtDel->execute($toDelete);
                     $delLinks = $stmtDel->fetchAll(PDO::FETCH_COLUMN);
                     foreach ($delLinks as $lien) {
                         $path = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/' . ltrim($lien, '/');
                         if (file_exists($path)) @unlink($path);
                     }
-                    $stmtDel2 = $pdo->prepare('DELETE FROM Photos WHERE id_photos IN (' . $in . ')');
+                    $stmtDel2 = $pdo->prepare('DELETE FROM Photos WHERE id_photo IN (' . $in . ')');
                     $stmtDel2->execute($toDelete);
                 }
 
